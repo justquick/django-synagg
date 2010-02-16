@@ -9,5 +9,8 @@ class FeedAdmin(admin.ModelAdmin):
     list_editable = ('url',)
     inlines = [EntryInline]
     
-admin.site.register(Entry)
+class EntryAdmin(admin.ModelAdmin):
+    list_display = ('title','feed','link')
+    
+admin.site.register(Entry, EntryAdmin)
 admin.site.register(Feed, FeedAdmin)

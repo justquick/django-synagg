@@ -1,0 +1,10 @@
+
+<h1>Snagged Feeds</h1>
+<ol>
+{% for feed in object_list %}
+<li>
+    <h3><a href="{{ feed.id }}/">{{ feed }}</a></h3>
+    <p>{{ feed.subtitle }}</p>
+</li>
+{% endfor %}
+</ol>

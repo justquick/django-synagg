@@ -1,0 +1,13 @@
+
+<h1>{{ object.title }}</h1>
+<h2><a href="{{ object.link }}">{{ object.link }}</a></h2>
+<p>{{ object.subtitle }}</p>
+<ol>
+{% for entry in object.entry_set.all %}
+<li>
+    <h3><a href="{{ entry.link }}">{{ entry }}</a></h3>
+    <p>From {{ entry.updated_parsed|date }} at {{ entry.updated_parsed|time }}</p>
+    <p>{{ entry.summary|safe }}</p>
+</li>
+{% endfor %}
+</ol>
