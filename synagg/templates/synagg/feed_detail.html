@@ -7,7 +7,7 @@
 <li>
     <h3><a href="{{ entry.link }}">{{ entry }}</a></h3>
     <p>From {{ entry.updated_parsed|date }} at {{ entry.updated_parsed|time }}</p>
-    <p>{{ entry.summary|safe }}</p>
+    {% for t in entry.text %}<p>{{ t }}</p>{% endfor %}
 </li>
 {% endfor %}
 </ol>

@@ -7,8 +7,10 @@ try:
     from feedparser import parse
     from tidylib import tidy_fragment
     from picklefield import PickledObjectField
+    from lxml.html import parse
 except ImportError:
-    raise ImproperlyConfigured('You must install pytidylib, django-picklefield==0.1 and feedparser==4.1')
+    raise ImproperlyConfigured('You must install lxml, pytidylib, django-picklefield==0.1 and feedparser==4.1')
+    
     
 class Feed(models.Model):
     url = models.URLField('RSS/Atom Feed URL',unique=True)
@@ -47,6 +49,10 @@ class Feed(models.Model):
     def __unicode__(self):
         return self.title
     
+
+class EntryManager(models.Manager):
+    pass
+
 class Entry(models.Model):
     feed = models.ForeignKey(Feed)
     data = PickledObjectField()
@@ -56,6 +62,19 @@ class Entry(models.Model):
     updated_parsed = property(lambda self: datetime(*self.data.updated_parsed[:-2]))
     summary = property(lambda self: tidy_fragment(self.data.summary)[0])
     tease = property(lambda self: self.summary.split('. ')[0])
+    
+    def text(self):
+        try:
+            return filter(None, (x.text for x in parse(self.link).getroot().cssselect('body p')))
+        except Exception, e:
+            print e
+            return []
+
+    def update(self, *a, **kw):
+        data = self.data.copy()
+        data.update(*a, **kw)
+        self.data = data
+        self.save()
     
     def __unicode__(self):
         return self.title
